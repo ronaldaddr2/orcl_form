@@ -1,0 +1,106 @@
+=============================================================
+//MESSAGE DIALOG
+//PUSH BUTTON
+
+DECLARE
+	alert_id ALERT;
+	alert_button NUMBER;
+	alert_msg VARCHAR2(100):=Error_Text;
+	--fld varchar2(100):='KARYAWAN.ID_KRY';
+	--Error_Text
+BEGIN
+	alert_id:=Find_Alert('My error');
+	SET_ALERT_PROPERTY(alert_id,alert_message_text,alert_msg);
+	alert_button:=Show_Alert(alert_id);
+	
+END;
+
+=============================================================
+
+//LOOKUP VALUE TEXT
+declare
+begin
+	:TEXT_ITEM9:=:ID_KRY;
+	
+end;
+=============================================================
+
+
+
+//INFO ALERT
+DECLARE
+	
+n number;
+alert_msg varchar(100):='apakah data sudah benar??'|| :ID_KRY;
+BEGIN
+	
+		SET_ALERT_PROPERTY('ALERT7',alert_message_text,alert_msg);
+	n:=show_alert('ALERT7');
+	IF n=ALERT_BUTTON1 THEN
+			:TEXT_ITEM9:=:ID_KRY;
+	END IF;
+	
+END;
+
+=============================================================
+
+
+
+//PROCEDURE SIMPAN
+
+DECLARE
+BEGIN
+SLIP_GAJI(:ID_KRY);	
+END;
+
+=============================================================	
+	
+	
+//CLOSE FORM	
+DECLARE
+BEGIN
+	CLOSE_FORM('FORM1');
+END;	
+=============================================================	
+
+
+//CARI ALERT
+
+DECLARE 
+  al_id     Alert; 
+  al_button NUMBER;
+  n number; 
+BEGIN 
+  al_id := Find_Alert('ALERT7'); 
+  IF Id_Null(al_id) THEN 
+    Message('User_Warning alert does not exist'); 
+    RAISE Form_Trigger_Failure; 
+  ELSE 
+   /* 
+   ** Show the warning alert 
+   */ 
+   al_button := Show_Alert(al_id); 
+   /* 
+   ** If user pressed OK (button 1) then bring up another 
+   ** alert to confirm -- button mappings are specified 
+   ** in the alert design 
+   */ 
+   IF al_button = ALERT_BUTTON1 THEN 
+      al_id := Find_Alert('Are_You_Sure'); 
+ 
+      IF Id_Null(al_id) THEN  
+        Message('The alert named: Are you sure? does not exist'); 
+        RAISE Form_Trigger_Failure; 
+       ELSE 
+         al_button := Show_Alert(al_id); 
+         IF al_button = ALERT_BUTTON2 THEN 
+           --Erase_All_Employee_Records;
+           Message('The alert named: Are you sure? does not exist'); 
+         END IF; 
+       END IF; 
+     END IF; 
+  END IF;
+  :TEXT_ITEM9:=al_button; 
+END; 
+
+=============================================================	
